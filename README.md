@@ -10,7 +10,7 @@
 	
 	
 	
-This repository enables the morphology of indiviudal platelets to be quantified from within a platelet spreading assay. This work is an adaption of the brilliant [Usiigaci](https://github.com/oist/Usiigaci) platform originally developed by Tsai *et al.* to track cell migration within phase contrast time-lapse microsopy. We have modified and retrained the mask regional convolutional neural network (Mask R-CNN) to segment the morphology of individual platelets from within Differential Inference Contrast (DIC) images. Furthermore, we have also repurposed the [Usiigaci](https://github.com/oist/Usiigaci) tracking GUI to function as quality control stage by which inaccurately segmented platelets can be removed from future analysis. 
+This repository enables the morphology of indiviudal platelets to be quantified from within a platelet spreading assay. This work is an modification of the brilliant [Usiigaci](https://github.com/oist/Usiigaci) platform originally developed by Tsai *et al.* to track cell migration within phase contrast time-lapse microsopy. We have altered and retrained the mask regional convolutional neural network (Mask R-CNN) to segment the morphology of individual platelets from within Differential Inference Contrast (DIC) images. Furthermore, we have also repurposed the [Usiigaci](https://github.com/oist/Usiigaci) tracking GUI to function as quality control panel by which inaccurately segmented platelets can be removed from future analysis. 
 
 
 ## Installation 
