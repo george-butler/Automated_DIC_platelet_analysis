@@ -58,7 +58,7 @@ def save_results_to_csv(path_out, trj, col_tuple, cell_visibility, pixel_scale):
     scaled_trj[scaled_trj['particle'].isin([cell_id
                                             for cell_id, show_cell in cell_visibility.items()
                                             if show_cell])].sort_values(order_list).to_csv(
-        join(path_out, 'tracks.csv'),
+        join(path_out, 'morphological_metrics.csv'),
         columns=cols_to_save,
         float_format='%f',  # Use '%.03f' for 3 digits after the comma
         index=False)

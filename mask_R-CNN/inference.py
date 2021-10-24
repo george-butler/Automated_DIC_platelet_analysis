@@ -31,7 +31,7 @@ import numpy as np
 import cv2
 from tqdm import tqdm
 
-from train1 import cellConfig
+from train import cellConfig
 from mrcnn import utils
 from mrcnn import model as modellib
 import time
@@ -284,13 +284,12 @@ def postprocess(data_dir, out_dir):
 
 
 #define the folder path to data for prediction
-data_dir = "~/Desktop/mask_R-CNN/training_data/inference_example/" #don't forget the / at the end
-#model_path = '/home/davince/Dropbox (OIST)/Deeplearning_system/Mask-RCNN_OIST/trainednetwork/mask_rcnn_nuclei_res101.h5'
+data_dir = "~/Desktop/mask_R-CNN/inference_example/" #don't forget the / at the end
 
 #define the model weight paths
-model_path_1 = "~/Desktop/mask_R-CNN/training_data/DIC_training_weights/mask_rcnn_120image_carley_alpha_config1_0300.h5"
-model_path_2 = "~/Desktop/mask_R-CNN/training_data/DIC_training_weights/mask_rcnn_120image_carley_alpha_config2_0300.h5"
-model_path_3 = "~/Desktop/mask_R-CNN/training_data/DIC_training_weights/mask_rcnn_120image_carley_alpha_config3_0300.h5"
+model_path_1 = "~/Desktop/mask_R-CNN/DIC_training_weights/mask_rcnn_120image_carley_alpha_config1_0300.h5"
+model_path_2 = "~/Desktop/mask_R-CNN/DIC_training_weights/mask_rcnn_120image_carley_alpha_config2_0300.h5"
+model_path_3 = "~/Desktop/mask_R-CNN/DIC_training_weights/mask_rcnn_120image_carley_alpha_config3_0300.h5"
 #model_list=[model_path_1]
 model_list = [model_path_1, model_path_2, model_path_3]
 # find all the subdirectory by first identifying all the directory in all levels, then add to a sub_directory list

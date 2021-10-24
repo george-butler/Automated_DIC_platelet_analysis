@@ -108,20 +108,12 @@ def cell_tracking_clicked(param):
         id_masks, cell_ids, color_list, background_id = prepare_mask_colors(merged_masks, trj)
         cell_color_idx = dict([(x, col_idx) for col_idx, x in enumerate(cell_ids)])
         id_masks_initial = id_masks.copy()
-        # Plot contours and tracks
+        # Plot contours
         for index, row in trj.sort_values('frame').iterrows():
             cell_id = row['particle']
             i_frame = row['frame']
             cell_y[cell_id, i_frame] = row['y']
             cell_x[cell_id, i_frame] = row['x']
-            # # Calculate cell contours
-            # cell_mask = (id_masks[:, :, i_frame] == cell_id).astype(np.uint8)
-            # contour_data_per_frame[cell_id, i_frame] = \
-            #     np.transpose(np.where(cell_mask - binary_erosion(cell_mask, selem=np.ones(3, 3)) > 0))
-
-            # First we copy the latest available track of the cell
-            # Here we take advantage that the tracks are sorted by frame,
-            # so we know that the tracks in the previous frames were already included
             new_track = np.zeros((0, 2))
             for i_frame in range(int(row['frame']) - 1, -1, -1):
                 if (row['particle'], i_frame) in track_data_per_frame:
@@ -152,12 +144,7 @@ def cell_tracking_clicked(param):
             pi_mask.addItem(curr_cell_id_mask)
             curr_cell_id_mask.setPos(cell_x[cell_id, current_frame_index], cell_y[cell_id, current_frame_index])
             cell_ids_mask[cell_id] = curr_cell_id_mask
-            # # Cell contours
-            # contour_plots_per_cell[cell_id] = \
-            #     pg.PlotDataItem(contour_data_per_frame[cell_id, current_frame_index],
-            #                     pen=pg.mkPen(color_list[cell_color_idx[cell_id]], width=1))
-            # v_raw_img.addItem(contour_plots_per_cell[cell_id])
-            # Cell tracks
+
             track_plots_per_cell[cell_id] = \
                 pg.PlotDataItem(track_data_per_frame[cell_id, current_frame_index],
                                 pen=pg.mkPen(color_list[cell_color_idx[cell_id]], width=1))
@@ -166,8 +153,6 @@ def cell_tracking_clicked(param):
             curr_cell_visibility = current_frame_index in cell_frame_presence[cell_id]
             curr_cell_id_img.setVisible(show_ids and curr_cell_visibility)
             curr_cell_id_mask.setVisible(show_ids and curr_cell_visibility)
-            # contour_plots_per_cell[cell_id].setVisible(show_contours and curr_cell_visibility)
-            track_plots_per_cell[cell_id].setVisible(show_tracks and curr_cell_visibility)
         # Fill in right dock with checkboxes for each cell
         p_cell_selection.addChildren(generate_cell_visibility_parametertree(cell_visibility))
         pt_cell_selection.setParameters(p_cell_selection, showTop=False)
@@ -244,7 +229,6 @@ def time_changed_raw_img(param, value):
             cell_ids_raw_img[cell_id].setVisible(show_ids and curr_visibility)
             cell_ids_mask[cell_id].setVisible(show_ids and curr_visibility)
             # contour_plots_per_cell[cell_id].setVisible(show_contours and curr_visibility)
-            track_plots_per_cell[cell_id].setVisible(show_tracks and curr_visibility)
 
 
 
@@ -269,26 +253,16 @@ def time_changed_mask(param, value):
             cell_ids_raw_img[cell_id].setVisible(show_ids and curr_visibility)
             cell_ids_mask[cell_id].setVisible(show_ids and curr_visibility)
             # contour_plots_per_cell[cell_id].setVisible(show_contours and curr_visibility)
-            track_plots_per_cell[cell_id].setVisible(show_tracks and curr_visibility)
 
 
 def param_changed(param, value):
-    global show_ids, show_contours, show_tracks
+    global show_ids, show_contours
     params[param.name()] = (value,) +  params[param.name()][1:]
     if param.name() == 'Show id\'s':
         show_ids = value
         for cell_id in cell_ids_raw_img:
             cell_ids_raw_img[cell_id].setVisible(show_ids and cell_visibility[cell_id])
             cell_ids_mask[cell_id].setVisible(show_ids and cell_visibility[cell_id])
-    # elif param.name() == 'Show contours':
-    #     show_contours = value
-    #     # for cell_id in contour_plots_per_cell:
-    #     #     contour_plots_per_cell[cell_id].setVisible(show_contours and cell_visibility[cell_id])
-    #elif param.name() == 'Show tracks':
-    #    show_tracks = value
-    #    for cell_id in track_plots_per_cell:
-    #        track_plots_per_cell[cell_id].setVisible(show_tracks and cell_visibility[cell_id])
-
 
 
 def cell_selection_changed(param, changes):
@@ -310,7 +284,6 @@ def update_cell_visibility(cell_id, visible):
     cell_ids_raw_img[cell_id].setVisible(show_ids and visible)
     cell_ids_mask[cell_id].setVisible(show_ids and visible)
     # contour_plots_per_cell[cell_id].setVisible(show_contours and visible)
-    track_plots_per_cell[cell_id].setVisible(show_tracks and visible)
     v_mask.updateImage()
 
 
@@ -334,8 +307,6 @@ params = dict([('Raw image extension', ('tif', 'str')),
                ('Mask extension', ('png', 'str')),
                ('Mask folder suffix', ('_mask_avg', 'str')),
                ('Show id\'s', (True, 'bool')),
-                #('Show contours', (True, 'bool')),
-               #('Show tracks', (True, 'bool')),
                ('Pixel scale', (0.125e-6, 'float', True, 'm'))])
 current_frame_index = -1
 background_id = -1
@@ -356,7 +327,6 @@ col_tuple = {}
 col_weights = {}
 show_ids = True
 show_contours = True
-show_tracks = True
 cell_visibility = {}
 cell_frame_presence = {}
 cell_ids_raw_img = {}
@@ -377,11 +347,11 @@ win.setWindowTitle('Quality control panel')
 ## Create docks
 d_io = Dock("I/O", size=(1, 1))  # I/O dock
 d_img = Dock("Img", size=(800, 400))  # Image dock
-d_tracks = Dock("Tracks", size=(150, 400))  # Tracks dock
+d_platelets = Dock("Platelets", size=(150, 400))  # Platelet dock
 
 dock_area.addDock(d_io, 'top')
 dock_area.addDock(d_img, 'bottom')
-dock_area.addDock(d_tracks, 'right')
+dock_area.addDock(d_platelets, 'right')
 
 ## Add widgets into each dock
 
@@ -411,27 +381,11 @@ b_cell_tracking = pg.QtGui.QPushButton("Colour\nMask")
 b_cell_tracking.clicked.connect(cell_tracking_clicked)
 b_cell_tracking.setEnabled(False)
 l_selection.addWidget(b_cell_tracking, row=0, col=1)
-# Save selected tracks button
+# Save selected Platelets button
 b_save_selected = pg.QtGui.QPushButton("Save\nSelection")
 b_save_selected.clicked.connect(save_selected_clicked)
 b_save_selected.setEnabled(False)
 l_selection.addWidget(b_save_selected, row=0, col=2)
-# Select all tracks button
-#b_select_all = pg.QtGui.QPushButton("Select\nAll Tracks")
-#b_select_all.clicked.connect(select_all_clicked)
-#b_select_all.setEnabled(False)
-#l_selection.addWidget(b_select_all, row=2, col=0)
-# Select no tracks button
-#b_select_none = pg.QtGui.QPushButton("Select\nNone")
-#b_select_none.clicked.connect(select_none_clicked)
-#b_select_none.setEnabled(False)
-#l_selection.addWidget(b_select_none, row=2, col=1)
-# Select complete tracks button
-#b_select_complete = pg.QtGui.QPushButton("Select\nComplete Tracks")
-#b_select_complete.clicked.connect(select_complete_clicked)
-#b_select_complete.setEnabled(False)
-#l_selection.addWidget(b_select_complete, row=2, col=2)
-# Add I/O buttons to the docking area
 d_io.addWidget(l_io, row=0, col=0)
 
 # Initialize raw image viewer
@@ -473,7 +427,7 @@ pt_cell_selection = pg.parametertree.ParameterTree()
 pt_cell_selection.setParameters(p_cell_selection, showTop=False)
 pt_cell_selection.itemClicked.connect(cell_focus_changed)
 # Add track list to the docking area
-d_tracks.addWidget(pt_cell_selection, row=0, col=0)
+d_platelets.addWidget(pt_cell_selection, row=0, col=0)
 
 # Show main window
 win.show()
