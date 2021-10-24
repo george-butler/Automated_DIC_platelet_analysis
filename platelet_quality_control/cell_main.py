@@ -372,7 +372,7 @@ win = pg.Qt.QtGui.QMainWindow()
 dock_area = DockArea()
 win.setCentralWidget(dock_area)
 win.resize(1000, 600)
-win.setWindowTitle('Quality control')
+win.setWindowTitle('Quality control panel')
 
 ## Create docks
 d_io = Dock("I/O", size=(1, 1))  # I/O dock
