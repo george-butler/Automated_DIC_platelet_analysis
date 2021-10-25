@@ -10,7 +10,7 @@
 	
 	
 	
-This repository enables the morphology of indiviudal platelets to be quantified from within a platelet spreading assay. This work is an adaption of the brilliant [Usiigaci](https://github.com/oist/Usiigaci) platform originally developed by Tsai *et al.* to track cell migration within phase contrast time-lapse microsopy. We have modified and retrained the mask regional convolutional neural network (Mask R-CNN) to segment the morphology of individual platelets from within Differential Inference Contrast (DIC) images. Furthermore, we have also repurposed the [Usiigaci](https://github.com/oist/Usiigaci) tracking GUI to function as quality control stage by which inaccurately segmented platelets can be removed from future analysis. 
+This repository enables the morphology of indiviudal platelets to be quantified from within a platelet spreading assay. This work is an modification of the brilliant [Usiigaci](https://github.com/oist/Usiigaci) platform originally developed by Tsai *et al.* to track cell migration within phase contrast time-lapse microsopy. We have altered and retrained the mask regional convolutional neural network (Mask R-CNN) to segment the morphology of individual platelets from within Differential Inference Contrast (DIC) images. Furthermore, we have also repurposed the [Usiigaci](https://github.com/oist/Usiigaci) tracking GUI to function as quality control panel by which inaccurately segmented platelets can be removed from future analysis. 
 
 
 ## Installation 
@@ -142,12 +142,3 @@ Seaborn is released under [BSD 3-clause license](https://github.com/mwaskom/seab
 ffmpeg is licensed under [LGPL 2.1 license](https://www.ffmpeg.org/legal.html)
 
 PyQtGraph is released under MIT license
-	
-```
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT 
-LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO 
-EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER 
-IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE 
-USE OR OTHER DEALINGS IN THE SOFTWARE.
-```
-	 
