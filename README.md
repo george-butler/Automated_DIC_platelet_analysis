@@ -8,9 +8,9 @@
 
 <sup><sup>3</sup>Both authors contributed equally</sup>
 	
+![segmentation_example](/example_images/DIC_and_colourised_mask.png)
 	
-	
-This repository enables the morphology of indiviudal platelets to be quantified from within a platelet spreading assay. This work is an modification of the brilliant [Usiigaci](https://github.com/oist/Usiigaci) platform originally developed by Tsai *et al.* to track cell migration within phase contrast time-lapse microsopy. We have altered and retrained the mask regional convolutional neural network (Mask R-CNN) to segment the morphology of individual platelets from within Differential Inference Contrast (DIC) images. Furthermore, we have also repurposed the [Usiigaci](https://github.com/oist/Usiigaci) tracking GUI to function as quality control panel by which inaccurately segmented platelets can be removed from future analysis. 
+This repository enables the morphology of indiviudal platelets to be quantified within a platelet spreading assay. This work is an modification of the brilliant [Usiigaci](https://github.com/oist/Usiigaci) platform originally developed by Tsai *et al.* to track cell migration within phase contrast time-lapse microsopy. We have altered and retrained the mask regional convolutional neural network (Mask R-CNN) to segment the morphology of individual platelets from within Differential Inference Contrast (DIC) images. Furthermore, we have also repurposed the [Usiigaci](https://github.com/oist/Usiigaci) tracking GUI to function as quality control panel by which inaccurately segmented platelets can be removed from future analysis. 
 
 
 ## Installation 
@@ -21,62 +21,64 @@ The necessary dependencies are the same as the original Usiigaci platform and as
 
 1. Download the LOCI pulgin
 	
-	 Assuming that you already have FIJI install, download the latest LOCI plugin from [here](https://sites.imagej.net/LOCI/plugins/LOCI/). Once downloaded, save to the FIJI plugin folder and then restart FIJI. If successful, the ROI Map function should now appear at Plugins>LOCI>ROI Map.
+	 Assuming that you already have FIJI installed, download the latest LOCI plugin from [here](https://sites.imagej.net/LOCI/plugins/LOCI/). Once downloaded, save the LOCI plugin to the FIJI plugin folder and then restart FIJI. If successful, the ROI Map function should now appear at Plugins>LOCI>ROI Map.
 
 2. Manual curation 
 	
 	1) Open each ‘.tif’ file with ImageJ by dragging and dropping into the ImageJ toolbar
 	2) Click Analyze>Tools>ROI Manager
-	3) Select the "show all" and "labels" check boxes on the ROI manager - this will keep the outline of each platelet visibile so you can track where you are
-	4) Draw around each platelets in the image using the ped-pad and save the outline with the ROI Manager
-	5) Once all of the platelets have been drawn round click Move>Save on the ROI Manager
+	3) Select the "show all" and "labels" check boxes on the ROI manager - this will keep the outline of each platelet visible so you can keep track of where you are
+	4) Draw around each platelet in the image using the pen-pad and save the outline with the ROI Manager
+	5) Once all of the platelets have been drawn round, click Move>Save on the ROI Manager
 	6) Save as "RoiSet" in the same directory as the ".tif" file
 	7) In the same directory , save the image by selecting File>Save As>PNG
 	8) Name the file "phase.png"
 	9) Generate the labeled image by selecting Plugins>LOCI>ROI Map
-	10) In the same directory as previous, save the colourful image by selecting File>Save As>PNG
+	10) In the same directory, save the colourful image by selecting File>Save As>PNG
 	11) Name the file "labeled.png"
-	12) Finally, repeat for all of the directories within the training set, ensuring the contents of each directory is as the same as the above, and all of the files are name correctly. 
+	12) You should then have a directory that looks like this:
+	   ![training_directory](/example_images/training_file_structure.png)
+	13) Finally, repeat for all of the directories within the training set, ensuring the contents of each directory is as the same as the above, and all of the files are named correctly. 
 
 3. Preprocess the training data
 	
-	Run the preprocess_data.py to change the colored mask, "labeled.png" into gray scale 8 bit image, "instance_ids.png". The location of the training data, "mask_R-CNN/training_data", can be set in line 44 
+	Run the preprocess_data.py in "/mask_R-CNN/preprocess_data.py" to convert the coloured mask, "labeled.png", into gray scale 8 bit image, "instance_ids.png". The location of the training data, "mask_R-CNN/training_data", can be set in line 44 
 	
 4. Training the network
 	
 	Finally run the train.py script in "/mask_R-CNN/train.py" to train the segmentation model. The location of the training data directory can be set in line 258. Likewise, the location of the final tracking weights can be set in line 289.
 
-## Segmentation using Mask R-CNN
+## Mask R-CNN Segmentation
 
 1. Download the trained weights
 	
-	The 3 trained network weights be found at "/mask_R-CNN/DIC_training_weights" and relate to networks that have been trained with 120 images manual curated images.
+	The 3 trained network weights be found at "/mask_R-CNN/DIC_training_weights" and relate to networks that have been trained with 120 manual curated images.
 
-	Note: Platelets were imaged by Köhler illuminated Nomarski differential interference contrast (DIC) optics using a Nikon eclipse Ti2 inverted microscope, equipped with a Nikon DS-Qi2 camera, and visualised using a 100x oil immersion objective lens. NIS Elements software was used for image capture. Finally, the original 16-bit DIC images with dimensions 2424x2424 were rescaled and coverted to 970x970 8-bit images in ImageJ. 
+	Note: Platelets were imaged by Köhler illuminated Nomarski differential interference contrast (DIC) optics using a Nikon eclipse Ti2 inverted microscope, equipped with a Nikon DS-Qi2 camera, and visualised using a 100x oil immersion objective lens. NIS Elements software was used for image capture. The original 16-bit DIC images with dimensions 2424x2424 were then rescaled and coverted to 970x970 8-bit images in ImageJ. 
 
 
 2. Data structure
 	
-	The DIC images collected from a given experiment can be stored, and then processed, from within one directory. However, an within the parent directory an individual subdirectory should still be used for each DIC image as seen in the "/mask_R-CNN/inference_example/"
+	The DIC images collected from a given experiment can be stored, and then processed, from within one directory. However, within the parent directory an individual subdirectory should still be used for each DIC image as seen in the "/mask_R-CNN/inference_example/"
 
 
 3. Segmenting an image
 	
-	The individual images are then segmented via the inference.py script, "/mask_R-CNN/inference.py".
+	The individual images are then segmented via the inference.py script in "/mask_R-CNN/inference.py".
 	
-	The path to the parent directory can be set at line 287. The script then searches through each of the nested directories to segmente each of the individual DIC images.
+	The path to the parent directory can be set at line 287. The script then searches through each of the nested directories to segment each of the individual DIC images.
 	
 	The paths to the trained model weights are then set in lines 290:292
 
 3. Running the inference script
 	
-	Navigative to the directory within which the inference.py script is stored and type 'python inference.py' into the terminal. If you are not familar with navigating via the terminal then please refer to this beginners [guide](https://ubuntu.com/tutorials/command-line-for-beginners#1-overview)
+	Navigative to the directory within which the inference.py script is stored and type 'python inference.py' into the terminal. If you are not familar with navigating via the terminal then please refer to this beginners [guide](https://ubuntu.com/tutorials/command-line-for-beginners#1-overview), or [here](https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/windows-commands#command-line-reference-a-z) if using a Windows machine.
 
 4. Output
 	
 	The segmented output will then be stored in a directory with the suffix "_mask_avg" that forms the basis of the qualtify control phase, an example of the output structure can be seen in "/DIC_example_data/test1/"
 	
-### Quality control panel
+## Quality control panel
 
 The quality control panel was based on the Usiigaci tracking GUI and therefore many of the same libraries must also be installed. 
 
@@ -95,9 +97,9 @@ The quality control panel was based on the Usiigaci tracking GUI and therefore m
 
 3. Posthoc filter 
 	
-	A posthoc filter was applied whereby objects containing an area of <250 pixels, or any pixels within a 10 pixel range of the image edge, were automatically removed to increase the speed of the quality control process. This filter can be adjusted by modifying lines 22 - 35 in the cell_features.py script, "/platelet_quality_control/cell_features.py"
+	A posthoc filter was applied such that objects containing an area of <250 pixels, or any pixels within a 10 pixel range of the image edge, were automatically removed to increase the speed of the quality control process. This filter can be adjusted by modifying lines 22 - 35 in the cell_features.py script, "/platelet_quality_control/cell_features.py"
 
-##### Using the qualtify control panel:
+### Using the qualtify control panel:
 
 1. Launch the quality control panel 
 										
@@ -110,7 +112,7 @@ The quality control panel was based on the Usiigaci tracking GUI and therefore m
 
 3. Run the posthoc filter
 										
-	Next, if you click the "Colour Mask" button on the upper right of the panel the segmented image will be automatically filtered and a colourised mask will appear inplace of the previous greyscale mask. Individual platelets can then be further removed by deselecting a given ID on the right hand panel
+	Next, if you click the "Colour Mask" button on the upper right of the panel the segmented image will be automatically filtered and a colourised image will appear inplace of the previous greyscale image. Individual platelets can then be further removed by deselecting a given ID on the right hand panel
 
 4. Saving the output
 										
