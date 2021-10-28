@@ -21,7 +21,7 @@ The necessary dependencies are the same as the original Usiigaci platform and as
 
 1. Download the LOCI pulgin
 	
-	 Assuming that you already have FIJI installed, download the latest LOCI plugin from [here](https://sites.imagej.net/LOCI/plugins/LOCI/). Once downloaded, save the LOCI plugin to the FIJI plugin folder and then restart FIJI. If successful, the ROI Map function should now appear at Plugins>LOCI>ROI Map.
+	 Assuming that you already have FIJI installed, follow the instructions [here](https://eliceirilab.org/software/fiji-plugins/) about how to download the LOCI plugin. If successful, the ROI Map function should now appear at Plugins>LOCI>ROI Map.
 
 2. Manual curation 
 	
