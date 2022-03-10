@@ -226,13 +226,9 @@ def main(out_dr):
     #this is for saving weights 
     out_dir = out_dr
     
-    #this is for hyperparameter testing     
-    #out_dir = "/home/ff004217/GPU0/mask_R-CNN/trained_network/ana"
 
     #define the path of pretrained weight to start from
     weights_path = "~/Desktop/mask_R-CNN/starting_weight/mask_rcnn_coco.h5"
-
-    #test_dir = "/home/ff004217/GPU0/mask_R-CNN/test_data/ana"
 
     print('> Training on data: ', train_dir)
     print('> Saving results to: ', out_dir)
