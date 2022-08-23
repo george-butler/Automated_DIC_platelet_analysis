@@ -29,7 +29,7 @@ The necessary dependencies are the same as the original Usiigaci platform and as
 	2) Click Analyze>Tools>ROI Manager
 	3) Select the "show all" and "labels" check boxes on the ROI manager - this will keep the outline of each platelet visible so you can keep track of where you are
 	4) Draw around each platelet in the image using the pen-pad and save the outline with the ROI Manager
-	5) Once all of the platelets have been drawn round, click Move>Save on the ROI Manager
+	5) Once all of the platelets have been drawn around, click More>Save on the ROI Manager
 	6) Save as "RoiSet" in the same directory as the ".tif" file
 	7) In the same directory , save the image by selecting File>Save As>PNG
 	8) Name the file "phase.png"
